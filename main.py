@@ -39,6 +39,9 @@ def webhook():
         print("[X]", get_timestamp(), "Error:\n>", e)
         return jsonify({'message': 'Error'}), 400
 
+@app.route("/", methods=["GET"])
+def index():
+    return "Webhook bot UP", 200
 
 if __name__ == "__main__":
     from waitress import serve
