@@ -20,9 +20,9 @@ def get_timestamp():
 @app.route("/webhook", methods=["POST"])
 def webhook():
     whitelisted_ips = ['52.89.214.238', '34.212.75.30', '54.218.53.128', '52.32.178.7']
-    client_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
-    if client_ip not in whitelisted_ips:
-        return jsonify({'message': 'Unauthorized'}), 401
+    #client_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+    #if client_ip not in whitelisted_ips:
+        #return jsonify({'message': 'Unauthorized'}), 401
     try:
         if request.method == "POST":
             data = request.get_json()
