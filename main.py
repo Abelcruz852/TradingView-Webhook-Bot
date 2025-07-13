@@ -8,7 +8,6 @@ from send_alert import send_alert
 import config
 import time
 from flask import Flask, request, jsonify
-
 app = Flask(__name__)
 
 
