@@ -4,7 +4,7 @@
 # File Name             : main.py                 #
 # ----------------------------------------------- #
 
-from handler import send_alert
+from send_alert import send_alert
 import config
 import time
 from flask import Flask, request, jsonify
