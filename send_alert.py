@@ -63,8 +63,16 @@ def send_alert(data):
             exit_side = "BUY"
 
         # Configurar apalancamiento y margen
-        client.futures_change_leverage(symbol=symbol, leverage=leverage)
-        client.futures_change_margin_type(symbol=symbol, marginType='ISOLATED')
+        try:
+            client.futures_change_leverage(symbol=symbol, leverage=leverage)
+        except Exception as e:
+            print(f"⚠️ Apalancamiento ya configurado o error leve: {e}")
+
+        try:
+            client.futures_change_margin_type(symbol=symbol, marginType='ISOLATED')
+        except Exception as e:
+            print(f"⚠️ Margen ya configurado o error leve: {e}")
+
 
         # Ejecutar orden de mercado
         print("📤 Ejecutando orden de mercado...")
