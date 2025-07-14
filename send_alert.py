@@ -2,6 +2,7 @@
 from binance.client import Client
 import os
 import json
+import numpy as np
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -34,6 +35,15 @@ def manejar_capital(resultado_trade=None):
             json.dump(datos, f)
 
     return capital
+    
+def obtener_precision(symbol):
+    info = client.futures_exchange_info()
+    for s in info['symbols']:
+        if s['symbol'] == symbol:
+            for f in s['filters']:
+                if f['filterType'] == 'LOT_SIZE':
+                    return int(abs(round(np.log10(float(f['stepSize'])))))
+    return 3  # Valor por defecto si no se encuentra
 
 def send_alert(data):
     try:
@@ -55,7 +65,8 @@ def send_alert(data):
             raise ValueError("Distancia SL no puede ser cero")
 
         riesgo_dolares = capital * riesgo_pct * leverage
-        quantity = round(riesgo_dolares / distancia_sl, 3)
+        precision = obtener_precision(symbol)
+        quantity = round(riesgo_dolares / distancia_sl, precision)
 
         if side == "BUY":
             exit_side = "SELL"
