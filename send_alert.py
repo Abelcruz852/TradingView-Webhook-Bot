@@ -125,4 +125,8 @@ def send_alert(data):
         manejar_capital(resultado_trade=-potencial_riesgo)
 
     except Exception as e:
+        import traceback
+        print("❌ EXCEPCIÓN DETECTADA:")
+        traceback.print_exc()
         print(f"❌ ERROR: {e}")
+
