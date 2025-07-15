@@ -53,7 +53,7 @@ def send_alert(data):
         sl_price    = float(data['sl'])
         tp_price    = float(data['tp'])
 
-        leverage     = int(data.get('leverage', 20))
+        leverage     = int(data.get('leverage', 60))
         riesgo_pct   = float(data.get('riesgo_pct', 0.01))
 
         # Usar capital virtual automatizado
@@ -64,7 +64,7 @@ def send_alert(data):
         if distancia_sl == 0:
             raise ValueError("Distancia SL no puede ser cero")
 
-        riesgo_dolares = capital * riesgo_pct * leverage
+        riesgo_dolares = capital * riesgo_pct
         precision = obtener_precision(symbol)
         quantity = round(riesgo_dolares / distancia_sl, precision)
 
@@ -93,6 +93,14 @@ def send_alert(data):
             type="MARKET",
             quantity=quantity
         )
+        print(f"🧮 Detalles de orden:")
+        print(f"  Capital disponible: {capital} USDT")
+        print(f"  Riesgo: {riesgo_pct * 100}%")
+        print(f"  Apalancamiento: {leverage}x")
+        print(f"  Distancia SL: {distancia_sl}")
+        print(f"  Riesgo total en USDT: {riesgo_dolares:.4f}")
+        print(f"  Quantity calculada: {quantity}")
+        print(f"  Valor notional: {quantity * entry_price:.4f} USDT")
 
         # Colocar TP (limit)
         client.futures_create_order(
@@ -112,7 +120,6 @@ def send_alert(data):
             type="STOP_MARKET",
             stopPrice=str(round(sl_price, 4)),
             closePosition=True,
-            reduceOnly=True
         )
 
         print("✅ Operación colocada con éxito en Binance Futures")
@@ -129,4 +136,3 @@ def send_alert(data):
         print("❌ EXCEPCIÓN DETECTADA:")
         traceback.print_exc()
         print(f"❌ ERROR: {e}")
-
